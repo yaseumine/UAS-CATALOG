@@ -41,7 +41,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       // 4. Gunakan tema yang sudah dibuat di core
       theme: AppTheme.light,
-
       // Tampilkan splash sebagai halaman awal untuk pengecekan token.
       home: const SplashPage(),
 

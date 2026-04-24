@@ -51,6 +51,33 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
           ],
         ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  isDark ? Icons.dark_mode : Icons.light_mode, // ← ikon berubah
+                  size: 20,
+                  color: isDark
+                      ? Colors.amber
+                      : Colors.grey.shade600, // ← warna berubah
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  isDark ? 'Mode Gelap' : 'Mode Terang', // ← label berubah
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+            Switch(
+              value: isDark, // ← posisi switch
+              onChanged: (_) =>
+                  context.read<ThemeProvider>().toggle(), // ← panggil toggle
+            ),
+          ],
+        ),
+
         actions: [
           Stack(
             alignment: Alignment.center,

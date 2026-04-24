@@ -48,9 +48,8 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: themeProvider.themeMode,
+
       // Tampilkan splash sebagai halaman awal untuk pengecekan token.
-      home: const SplashPage(),
-      initialRoute: AppRouter.splash,
 
       // 6. Daftarkan semua rute dari AppRouter
       routes: AppRouter.routes,

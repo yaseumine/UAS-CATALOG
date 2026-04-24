@@ -1,6 +1,7 @@
 import 'package:catalog/core/routes/app_routes.dart';
 import 'package:catalog/core/themes/app_theme.dart';
 import 'package:catalog/features/auth/presentation/providers/auth_provider.dart';
+import 'package:catalog/features/auth/presentation/providers/theme_provider.dart';
 import 'package:catalog/features/cart/presentation/providers/cart_providers.dart';
 import 'package:catalog/features/dashboard/presentation/providers/product_providers.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ void main() async {
     // 3. Daftarkan semua Provider di level paling atas
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => ProductProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
@@ -36,13 +38,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 1. Baca ThemeProvider — widget ini rebuild saat toggle()
+    final themeProvider = context.watch<ThemeProvider>();
+
     return MaterialApp(
       title: 'Toko Tani Pierre',
       debugShowCheckedModeBanner: false,
       // 4. Gunakan tema yang sudah dibuat di core
       theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: themeProvider.themeMode,
       // Tampilkan splash sebagai halaman awal untuk pengecekan token.
       home: const SplashPage(),
+      initialRoute: AppRouter.splash,
 
       // 6. Daftarkan semua rute dari AppRouter
       routes: AppRouter.routes,

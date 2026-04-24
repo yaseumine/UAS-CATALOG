@@ -53,7 +53,22 @@ class AppTheme {
           vertical: 14.0,
         ),
       ),
-
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return AppColors.primary; // saat ON → biru
+          }
+          return Colors.grey.shade400; // saat OFF → abu
+        }),
+        trackColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return AppColors.primary.withValues(
+              alpha: 0.4,
+            ); // ON → biru transparan
+          }
+          return Colors.grey.shade300; // OFF → abu
+        }),
+      ),
       cardTheme: CardThemeData(
         color: AppColors.surface,
         shape: RoundedRectangleBorder(
@@ -83,7 +98,24 @@ class AppTheme {
         elevation: 4.0,
         centerTitle: false,
       ),
-
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return AppColors.primary; // saat ON → biru
+          }
+          return Colors
+              .grey
+              .shade600; // saat OFF → abu lebih gelap untuk dark mode
+        }),
+        trackColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return AppColors.primary.withValues(
+              alpha: 0.4,
+            ); // ON → biru transparan
+          }
+          return Colors.grey.shade800; // OFF → abu gelap
+        }),
+      ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.accent,

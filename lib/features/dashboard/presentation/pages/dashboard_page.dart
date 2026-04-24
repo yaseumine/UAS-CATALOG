@@ -1,6 +1,7 @@
 import 'package:catalog/core/constants/app_colors.dart';
 import 'package:catalog/core/routes/app_routes.dart';
 import 'package:catalog/features/auth/presentation/providers/auth_provider.dart';
+import 'package:catalog/features/auth/presentation/widgets/account_dialog.dart';
 import 'package:catalog/features/cart/presentation/providers/cart_providers.dart';
 import 'package:catalog/features/dashboard/presentation/providers/product_providers.dart';
 
@@ -48,32 +49,6 @@ class _DashboardPageState extends State<DashboardPage> {
                 fontWeight: FontWeight.w500,
                 color: Colors.white70,
               ),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  isDark ? Icons.dark_mode : Icons.light_mode, // ← ikon berubah
-                  size: 20,
-                  color: isDark
-                      ? Colors.amber
-                      : Colors.grey.shade600, // ← warna berubah
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  isDark ? 'Mode Gelap' : 'Mode Terang', // ← label berubah
-                  style: const TextStyle(fontSize: 14),
-                ),
-              ],
-            ),
-            Switch(
-              value: isDark, // ← posisi switch
-              onChanged: (_) =>
-                  context.read<ThemeProvider>().toggle(), // ← panggil toggle
             ),
           ],
         ),
@@ -146,7 +121,6 @@ class _DashboardPageState extends State<DashboardPage> {
             ],
           ),
         ),
-
         ProductStatus.error => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -365,6 +339,26 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
         ),
       },
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: 0,
+        onTap: (index) {
+          if (index == 2) {
+            showDialog(
+              context: context,
+              builder: (context) => const AccountDialog(),
+            );
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.receipt_long),
+            label: 'Transaksi',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Akun'),
+        ],
+      ),
     );
   }
 }

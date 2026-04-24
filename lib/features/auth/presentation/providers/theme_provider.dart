@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
 
-enum ThemeMode {
-  system, // ikuti pengaturan sistem HP
-  light, // paksa terang
-  dark, // paksa gelap
-}
-
 class ThemeProvider extends ChangeNotifier {
   bool _isDark = false; // ← state: false = light, true = dark
 

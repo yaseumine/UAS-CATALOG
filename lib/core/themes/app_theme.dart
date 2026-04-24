@@ -116,6 +116,15 @@ class AppTheme {
           return Colors.grey.shade800; // OFF → abu gelap
         }),
       ),
+      // Hanya didefinisikan di dark (light sudah otomatis hitam)
+      textTheme: const TextTheme(
+        bodyLarge: TextStyle(color: AppColors.darkTextPrimary),
+        bodyMedium: TextStyle(color: AppColors.darkTextPrimary),
+        bodySmall: TextStyle(color: AppColors.darkTextSecondary),
+        titleLarge: TextStyle(color: AppColors.darkTextPrimary),
+        titleMedium: TextStyle(color: AppColors.darkTextPrimary),
+      ),
+
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.accent,

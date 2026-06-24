@@ -6,7 +6,7 @@ import 'package:catalog/features/auth/presentation/widgets/custom_button.dart';
 import 'package:catalog/features/auth/presentation/widgets/custom_text_field.dart';
 import 'package:catalog/features/auth/presentation/widgets/divider_with_text.dart';
 import 'package:catalog/features/auth/presentation/widgets/google_sign_in_button.dart';
-import 'package:catalog/features/auth/presentation/widgets/loading_overlay.dart';
+// import 'package:catalog/features/auth/presentation/widgets/loading_overlay.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 
@@ -149,117 +149,115 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final isLoading = context.watch<AuthProvider>().isLoading;
 
-    return LoadingOverlay(
-      isLoading: isLoading,
-      message: 'Masuk ke akun...',
-      child: Scaffold(
-        backgroundColor: AppColors.background,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  const SizedBox(height: 32),
-                  const AuthHeader(
-                    icon: Icons.storefront_outlined,
-                    title: "Pierre's Store",
-                    subtitle:
-                        'Beli benih, pupuk, dan penuhi kebutuhan ladangmu',
+    // return LoadingOverlay(
+    //   isLoading: isLoading,
+    //   message: 'Masuk ke akun...',
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const SizedBox(height: 32),
+                const AuthHeader(
+                  icon: Icons.storefront_outlined,
+                  title: "Pierre's Store",
+                  subtitle: 'Beli benih, pupuk, dan penuhi kebutuhan ladangmu',
+                ),
+                const SizedBox(height: 32),
+                CustomTextField(
+                  label: 'Email',
+                  hint: 'contoh@email.com',
+                  controller: _emailCtrl,
+                  keyboardType: TextInputType.emailAddress,
+                  prefixIcon: const Icon(
+                    Icons.email_outlined,
+                    color: AppColors.primary,
                   ),
-                  const SizedBox(height: 32),
-                  CustomTextField(
-                    label: 'Email',
-                    hint: 'contoh@email.com',
-                    controller: _emailCtrl,
-                    keyboardType: TextInputType.emailAddress,
-                    prefixIcon: const Icon(
-                      Icons.email_outlined,
+                  validator: (v) {
+                    if (v?.isEmpty ?? true) return 'Email wajib diisi';
+                    if (!EmailValidator.validate(v!)) {
+                      return 'Format email salah';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                CustomTextField(
+                  label: 'Password',
+                  hint: 'Masukkan password',
+                  controller: _passCtrl,
+                  obscureText: !_showPass,
+                  prefixIcon: const Icon(
+                    Icons.lock_outline,
+                    color: AppColors.primary,
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _showPass ? Icons.visibility_off : Icons.visibility,
                       color: AppColors.primary,
                     ),
-                    validator: (v) {
-                      if (v?.isEmpty ?? true) return 'Email wajib diisi';
-                      if (!EmailValidator.validate(v!)) {
-                        return 'Format email salah';
-                      }
-                      return null;
-                    },
+                    onPressed: () => setState(() => _showPass = !_showPass),
                   ),
-                  const SizedBox(height: 16),
-                  CustomTextField(
-                    label: 'Password',
-                    hint: 'Masukkan password',
-                    controller: _passCtrl,
-                    obscureText: !_showPass,
-                    prefixIcon: const Icon(
-                      Icons.lock_outline,
-                      color: AppColors.primary,
-                    ),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _showPass ? Icons.visibility_off : Icons.visibility,
+                  validator: (v) =>
+                      (v?.isEmpty ?? true) ? 'Password wajib diisi' : null,
+                ),
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () => _showForgotPasswordDialog(context),
+                    child: const Text(
+                      'Lupa Password?',
+                      style: TextStyle(
                         color: AppColors.primary,
+                        fontWeight: FontWeight.bold,
                       ),
-                      onPressed: () => setState(() => _showPass = !_showPass),
                     ),
-                    validator: (v) =>
-                        (v?.isEmpty ?? true) ? 'Password wajib diisi' : null,
                   ),
-                  const SizedBox(height: 8),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () => _showForgotPasswordDialog(context),
+                ),
+                const SizedBox(height: 8),
+                CustomButton(
+                  label: 'Masuk',
+                  onPressed: _loginEmail,
+                  isLoading: isLoading,
+                ),
+                const SizedBox(height: 20),
+                const DividerWithText(text: 'Atau masuk dengan'),
+                const SizedBox(height: 20),
+                GoogleSignInButton(
+                  onPressed: _loginGoogle,
+                  isLoading: isLoading,
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Belum punya akun? ',
+                      style: TextStyle(color: AppColors.textPrimary),
+                    ),
+                    GestureDetector(
+                      // Pakai replacement agar halaman login tidak menumpuk di stack.
+                      onTap: () => Navigator.pushReplacementNamed(
+                        context,
+                        AppRouter.register,
+                      ),
                       child: const Text(
-                        'Lupa Password?',
+                        'Daftar',
                         style: TextStyle(
                           color: AppColors.primary,
                           fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  CustomButton(
-                    label: 'Masuk',
-                    onPressed: _loginEmail,
-                    isLoading: isLoading,
-                  ),
-                  const SizedBox(height: 20),
-                  const DividerWithText(text: 'Atau masuk dengan'),
-                  const SizedBox(height: 20),
-                  GoogleSignInButton(
-                    onPressed: _loginGoogle,
-                    isLoading: isLoading,
-                  ),
-                  const SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Belum punya akun? ',
-                        style: TextStyle(color: AppColors.textPrimary),
-                      ),
-                      GestureDetector(
-                        // Pakai replacement agar halaman login tidak menumpuk di stack.
-                        onTap: () => Navigator.pushReplacementNamed(
-                          context,
-                          AppRouter.register,
-                        ),
-                        child: const Text(
-                          'Daftar',
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),

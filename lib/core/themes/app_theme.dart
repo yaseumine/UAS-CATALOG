@@ -85,6 +85,7 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       colorScheme: ColorScheme.fromSeed(
+        brightness: Brightness.dark,
         seedColor: AppColors.primaryDark,
         primary: AppColors.primaryDark,
         surface: AppColors.darkSurface,

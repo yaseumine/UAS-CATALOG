@@ -169,9 +169,13 @@ class _DashboardPageState extends State<DashboardPage> {
             itemCount: product.products.length,
             itemBuilder: (context, i) {
               final p = product.products[i];
+              final currentSurface = Theme.of(context).colorScheme.surface;
+              final currentTextColor =
+                  Theme.of(context).textTheme.bodyLarge?.color ??
+                  AppColors.textPrimary;
               return Container(
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: currentSurface,
                   borderRadius: BorderRadius.circular(4.0),
                   border: Border.all(color: AppColors.primaryDark, width: 2.0),
                   boxShadow: const [

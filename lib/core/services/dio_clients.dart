@@ -24,7 +24,7 @@ class DioClient {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          debugPrint('[REQUEST] ${options.method} ${options.path}');
+          debugPrint('[REQUEST] ${options.method} ${options.uri}');
           handler.next(options);
         },
         onResponse: (response, handler) {
@@ -32,10 +32,18 @@ class DioClient {
           handler.next(response);
         },
         onError: (error, handler) async {
-          debugPrint('[ERROR] ${error.response?.statusCode}');
+          debugPrint('================ DIO ERROR ================');
+          debugPrint('TYPE: ${error.type}');
+          debugPrint('URL: ${error.requestOptions.uri}');
+          debugPrint('STATUS: ${error.response?.statusCode}');
+          debugPrint('MESSAGE: ${error.message}');
+          debugPrint('RESPONSE DATA: ${error.response?.data}');
+          debugPrint('===========================================');
+
           if (error.response?.statusCode == 401) {
-            await SecureStorageService.clearAll(); // Auto logout
+            await SecureStorageService.clearAll();
           }
+
           handler.next(error);
         },
       ),

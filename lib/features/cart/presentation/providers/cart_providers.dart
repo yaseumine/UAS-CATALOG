@@ -73,8 +73,11 @@ class CartProvider extends ChangeNotifier {
   }
 
   // 4. Fitur Checkout
-  Future<bool> checkout({required String address, String notes = ''}) async {
-    if (_items.isEmpty) return false;
+  Future<CheckoutResultModel?> checkout({
+    required String address,
+    String notes = '',
+  }) async {
+    if (_items.isEmpty) return null;
 
     _isLoading = true;
     _errorMessage = null;
@@ -96,22 +99,19 @@ class CartProvider extends ChangeNotifier {
         notes: notes,
       );
 
-      final success = await _repository.processCheckout(requestData);
+      final result = await _repository.processCheckout(requestData);
 
-      if (success) {
-        _items.clear();
-        _isLoading = false;
-        notifyListeners();
-        return true;
-      }
-
-      throw Exception('Gagal memproses pesanan di server');
-    } catch (_) {
+      _items.clear();
+      _isLoading = false;
+      notifyListeners();
+      return result;
+    } catch (error) {
+      debugPrint('[CartProvider] checkout gagal: $error');
       _errorMessage =
           'Gagal checkout: periksa koneksi atau pastikan backend menyala';
       _isLoading = false;
       notifyListeners();
-      return false;
+      return null;
     }
   }
 }

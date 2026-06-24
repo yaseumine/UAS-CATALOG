@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 import 'core/services/secure_storage.dart';
+import 'core/services/global_institute_pay_service.dart';
 
 void main() async {
   // 1. Pastikan binding Flutter sudah siap
@@ -18,6 +19,7 @@ void main() async {
 
   // 2. Inisialisasi Firebase sebelum aplikasi dijalankan
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await GlobalInstitutePayService().init();
 
   runApp(
     // 3. Daftarkan semua Provider di level paling atas
@@ -81,10 +83,21 @@ class _SplashPageState extends State<SplashPage> {
 
     // Jika token ada, langsung ke Dashboard. Jika tidak, ke Login
 
-    final route = token != null ? AppRouter.dashboard : AppRouter.login;
+    final pendingCallback = token == null
+        ? null
+        : GlobalInstitutePayService().consumePendingCallback();
+    final route = token == null
+        ? AppRouter.login
+        : pendingCallback != null
+        ? AppRouter.paymentResult
+        : AppRouter.dashboard;
 
     if (mounted) {
-      Navigator.pushReplacementNamed(context, route);
+      Navigator.pushReplacementNamed(
+        context,
+        route,
+        arguments: pendingCallback,
+      );
     }
   }
 

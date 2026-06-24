@@ -36,3 +36,37 @@ class CheckoutRequestModel {
     'notes': notes,
   };
 }
+
+class CheckoutResultModel {
+  final int orderId;
+  final double totalAmount;
+  final String status;
+
+  const CheckoutResultModel({
+    required this.orderId,
+    required this.totalAmount,
+    required this.status,
+  });
+
+  factory CheckoutResultModel.fromJson(Map<String, dynamic> json) {
+    final rawId = json['id'] ?? json['ID'];
+    final rawAmount = json['total_amount'];
+
+    final orderId = rawId is num ? rawId.toInt() : int.tryParse('$rawId');
+    final totalAmount = rawAmount is num
+        ? rawAmount.toDouble()
+        : double.tryParse('$rawAmount');
+
+    if (orderId == null || totalAmount == null) {
+      throw const FormatException(
+        'Respons checkout tidak memiliki data order.',
+      );
+    }
+
+    return CheckoutResultModel(
+      orderId: orderId,
+      totalAmount: totalAmount,
+      status: json['status'] as String? ?? 'pending',
+    );
+  }
+}

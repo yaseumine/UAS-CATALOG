@@ -4,13 +4,25 @@ import 'package:catalog/features/cart/domain/repositories/cart_repository.dart';
 
 class CartRepositoryImpl implements CartRepository {
   @override
-  Future<bool> processCheckout(CheckoutRequestModel data) async {
+  Future<CheckoutResultModel> processCheckout(CheckoutRequestModel data) async {
     try {
       final response = await DioClient.instance.post(
         'orders/checkout',
         data: data.toJson(),
       );
-      return response.statusCode == 200 || response.statusCode == 201;
+
+      final responseData = response.data;
+      if ((response.statusCode != 200 && response.statusCode != 201) ||
+          responseData is! Map<String, dynamic> ||
+          responseData['data'] is! Map<String, dynamic>) {
+        throw const FormatException(
+          'Respons checkout dari server tidak valid.',
+        );
+      }
+
+      return CheckoutResultModel.fromJson(
+        responseData['data'] as Map<String, dynamic>,
+      );
     } catch (e) {
       rethrow;
     }

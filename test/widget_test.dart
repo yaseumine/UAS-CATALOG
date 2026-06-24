@@ -1,30 +1,27 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+import 'package:catalog/core/services/global_institute_pay_service.dart';
+import 'package:catalog/features/cart/presentation/pages/payment_result_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:catalog/main.dart';
-
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('menampilkan hasil callback pembayaran sukses', (tester) async {
+    const callback = PaymentCallbackData(
+      status: 'success',
+      reference: 'INV-42',
+      transactionId: 'TXN789',
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    await tester.pumpWidget(
+      MaterialApp(
+        onGenerateRoute: (_) => MaterialPageRoute<void>(
+          settings: const RouteSettings(arguments: callback),
+          builder: (_) => const PaymentResultPage(),
+        ),
+      ),
+    );
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Pembayaran Berhasil!'), findsOneWidget);
+    expect(find.text('INV-42'), findsOneWidget);
+    expect(find.text('TXN789'), findsOneWidget);
   });
 }

@@ -22,6 +22,23 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.org.catalog.paymentCallback</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>catalog</string>
+			</array>
+		</dict>
+	</array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>dompetkampus</string>
+	</array>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Catalog menggunakan Face ID untuk memverifikasi pembayaran e-Money.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

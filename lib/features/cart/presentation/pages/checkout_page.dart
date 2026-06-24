@@ -1,4 +1,6 @@
 import 'package:catalog/core/constants/app_colors.dart';
+import 'package:catalog/core/routes/app_routes.dart';
+import 'package:catalog/core/services/global_institute_pay_service.dart';
 import 'package:catalog/features/auth/presentation/widgets/custom_button.dart';
 import 'package:catalog/features/cart/presentation/providers/cart_providers.dart';
 import 'package:flutter/material.dart';
@@ -135,49 +137,82 @@ class CheckoutPage extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 48),
+              const SizedBox(height: 28),
+
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  border: Border.all(color: AppColors.border, width: 2),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(
+                      Icons.account_balance_wallet,
+                      color: AppColors.primary,
+                      size: 34,
+                    ),
+                    SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Dompet Kampus Global',
+                            style: TextStyle(
+                              color: AppColors.textPrimary,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          SizedBox(height: 3),
+                          Text(
+                            'Aman dengan biometrik, PIN, dan 2FA',
+                            style: TextStyle(
+                              color: AppColors.textSecondary,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(Icons.verified_user, color: AppColors.accent),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 28),
 
               // TOMBOL BAYAR (Pakai CustomButton tema Stardew)
               CustomButton(
-                label: isCartEmpty ? 'Keranjang Kosong' : 'Bayar Sekarang',
+                label: isCartEmpty
+                    ? 'Keranjang Kosong'
+                    : 'Bayar dengan e-Money',
+                icon: const Icon(Icons.fingerprint),
                 variant: ButtonVariant.primary,
                 isLoading: cart.isLoading,
                 onPressed: cart.isLoading || isCartEmpty
                     ? null
                     : () async {
-                        final success = await context.read<CartProvider>().checkout(
-                          address:
-                              'Pelican Town, Farmhouse', // Ganti alamat default
-                          notes: 'Tolong kirim ke kotak depan rumah ya.',
-                        );
+                        final result = await context
+                            .read<CartProvider>()
+                            .checkout(
+                              address: 'Pelican Town, Farmhouse',
+                              notes: 'Tolong kirim ke kotak depan rumah ya.',
+                            );
 
                         if (!context.mounted) return;
 
-                        if (success) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text(
-                                'Transaksi Berhasil! Barang akan dikirim ke ladangmu.',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              backgroundColor: AppColors.accent, // Hijau sukses
-                              behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4.0),
-                                side: const BorderSide(
-                                  color: AppColors.primaryDark,
-                                  width: 2.0,
-                                ),
-                              ),
-                            ),
-                          );
-
-                          Navigator.popUntil(
+                        if (result != null) {
+                          Navigator.pushReplacementNamed(
                             context,
-                            ModalRoute.withName('/dashboard'),
+                            AppRouter.paymentPending,
+                            arguments: PaymentRequestData(
+                              orderId: result.orderId,
+                              amount: result.totalAmount,
+                              description:
+                                  'Belanja di Toko Tani Pierre #${result.orderId}',
+                            ),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(

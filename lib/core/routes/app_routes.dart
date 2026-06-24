@@ -4,7 +4,10 @@ import 'package:catalog/features/auth/presentation/pages/verify_email_page.dart'
 import 'package:catalog/features/auth/presentation/providers/auth_provider.dart';
 import 'package:catalog/features/cart/presentation/pages/cart_page.dart';
 import 'package:catalog/features/cart/presentation/pages/checkout_page.dart';
+import 'package:catalog/features/cart/presentation/pages/payment_pending_page.dart';
+import 'package:catalog/features/cart/presentation/pages/payment_result_page.dart';
 import 'package:catalog/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:catalog/main.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,13 +19,17 @@ class AppRouter {
   static const String dashboard = '/dashboard';
   static const String cart = '/cart';
   static const String checkout = '/checkout';
+  static const String paymentPending = '/payment-pending';
+  static const String paymentResult = '/payment-result';
 
   static Map<String, WidgetBuilder> get routes => {
-    // splash: (_) => const SplashPage(),
+    splash: (_) => const SplashPage(),
     login: (_) => const LoginPage(),
     register: (_) => const RegisterPage(),
     cart: (_) => const CartPage(),
     checkout: (_) => const CheckoutPage(),
+    paymentPending: (_) => const PaymentPendingPage(),
+    paymentResult: (_) => const PaymentResultPage(),
     verifyEmail: (_) => const VerifyEmailPage(),
     dashboard: (_) => const AuthGuard(child: DashboardPage()),
   };
